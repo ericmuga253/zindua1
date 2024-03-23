@@ -1,1 +1,2 @@
-my list-(1,2,3,4,5)
+print('hello world')
+my_list = [1,2,3,4]
