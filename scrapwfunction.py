@@ -3,27 +3,17 @@ import csv
 from bs4 import BeautifulSoup
 
 def url_input(url):
-
-    url = (f'enter your url{url}')
     response = requests.get(url)
 
+    soup = BeautifulSoup(response.content, 'html.parser')
 
-# print(response.content)
+    names = soup.find_all('h3', class_='name')
+    prices = soup.find_all('div', class_='prc')
 
-    soup=BeautifulSoup(response.content,'html.parser')
-# print(soup)
+    with open('names_and_prices.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Name', 'Price'])
+        for name, price in zip(names, prices):
+            writer.writerow([name.text.strip(), price.text.strip()])
 
-    names=soup.find_all('h3', class_='name')
-    for name in names:
-     print(name.text)
-    prices=soup.find_all('div', class_='prc')
-    for price in prices:
-     print(price.text, name.text)
-
-
-    with open('names and prices.csv', 'w',newline='')as csvfile:
-        writer=csv.writer(csvfile)
-        writer.writerow(['price and names'])
-        for price in prices:
-         writer.writerow([price.text,name.text])
-url_input('https://www.jumia.co.ke/')
+url_input(url='https://www.jumia.co.ke/')
